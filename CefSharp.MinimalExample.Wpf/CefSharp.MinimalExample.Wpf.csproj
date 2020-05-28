@@ -151,6 +151,14 @@
   <ItemGroup>
     <EmbeddedResource Include="web\index.html" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="web\java\jquery-1.11.3.min.js" />
+    <EmbeddedResource Include="web\java\ol.css" />
+    <EmbeddedResource Include="web\java\ol.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="web\java\proj4.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\CefSharp.Common.79.1.360\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.79.1.360\build\CefSharp.Common.targets')" />
   <Import Project="..\packages\CefSharp.Wpf.79.1.360\build\CefSharp.Wpf.targets" Condition="Exists('..\packages\CefSharp.Wpf.79.1.360\build\CefSharp.Wpf.targets')" />

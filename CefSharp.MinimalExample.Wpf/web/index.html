@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Sample Web Site</title>
+    <script src="java/jquery-1.11.3.min.js" type="text/javascript"></script>    
+    <script src="java/ol.js" type="text/javascript"></script>
+    <script src="java/proj4.js" type="text/javascript"></script>    
+    <link rel="stylesheet" href="java/ol.css" type="text/css">
 </head>
 <body>
 <script>
@@ -13,6 +17,123 @@
         xmlHttp.send( null );
         return xmlHttp.responseText;
     }
+
+    var wmsResolution = [];
+    
+    var extent = [2420000, 130000, 2900000, 1350000];
+
+    var projection = ol.proj.get('EPSG:2056');
+    projection.setExtent(extent);
+
+    var mousePositionControl = new ol.control.MousePosition(
+        {
+            coordinateFormat: ol.coordinate.createStringXY(1),
+            /*projection: projection,*/
+            projection: 'EPSG:2056',
+            className: 'custom-mouse-position',
+            target: document.getElementById('info'),
+            undefinedHTML: '&nbsp;'
+        });
+    
+    //map control
+    var map = new ol.Map({
+        controls: ol.control.defaults().extend([
+            new ol.control.ScaleLine({
+                units: 'metric'
+            })
+        ]).extend([mousePositionControl]),
+        layers: [filterVector],
+        overlays: [overlay],
+        logo: false,
+        target: 'map',
+        view: new ol.View({
+        })
+    });
+
+    var filterVector = new ol.layer.Vector({
+        source: filterSource,
+        style: new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.5)'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#ffcc33',
+                width: 2
+            }),
+            image: new ol.style.Circle({
+                radius: 7,
+                fill: new ol.style.Fill({
+                    color: '#ffcc33'
+                })
+            })
+        })
+    });
+
+    var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */({
+        element: container,
+        autoPan: true,
+        autoPanAnimation: {
+            duration: 250
+        }
+    }));
+
+    
+    function initializeMap()
+    {
+        if (typeof(map) == 'undefined') {
+            map = new ol.Map({
+                controls: ol.control.defaults().extend([
+                    new ol.control.ScaleLine({
+                        units: 'metric'
+                    })
+                ]).extend([mousePositionControl]),
+                layers: [filterVector],
+                overlays: [overlay],
+                logo: false,
+                target: 'map',
+                view: new ol.View({})
+            });
+        }
+    }
+
+    function getCalcResolutionSrv(clientRes) {
+        var calcResolutionSrv = clientRes * 0.0254 / 96;
+        return calcResolutionSrv.toFixed(10);
+    }
+    
+    //create wms layer
+    function addWMSLayer(url, attTxt, attHref, layer, format, server, res1, res2, res3, res4) {
+
+        initializeMap();
+        //tile source for load wms layers
+        var newRes1 = Number(getCalcResolutionSrv(res1));
+        var newRes2 = Number(getCalcResolutionSrv(res2));
+        var newRes3 = Number(getCalcResolutionSrv(res3));
+        var newRes4 = Number(getCalcResolutionSrv(res4));
+
+        var newWMSSource = new ol.source.TileWMS({
+            url: url,
+            params: {
+                'LAYERS': layer,
+                'FORMAT': format,
+            },
+            serverType: 'mapserver',
+            projection: projection
+        });
+
+        var newWmsLayer = new ol.layer.Tile({
+            extent: extent,
+            source: newWMSSource,
+            minResolution: newRes4,
+            maxResolution: newRes1
+        });
+        wmsResolution.push(Number(newRes1 - 0.00100));
+        wmsResolution.push(newRes2);
+        wmsResolution.push(newRes3);
+        wmsResolution.push(Number(newRes4 + 0.00100));
+        map.addLayer(newWmsLayer);
+        ECBJS.addNewWMSLayer(url, layer, newRes1, newRes2, newRes3, newRes4);
+    };    
 </script>
 Testing Testing 123
 </body>
