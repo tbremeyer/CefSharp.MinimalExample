@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
 
 namespace CefSharp.MinimalExample.Wpf
@@ -24,6 +22,7 @@ namespace CefSharp.MinimalExample.Wpf
         private async Task CallWebSite()
         {
             if (!_firstTime) return;
+            //Browser.ShowDevTools();
             var result = await Browser.EvaluateScriptAsync($"addWMSLayer('http://wms.zh.ch/Raster1000CWMS', 'Landeskarte 1:500000 / web.wms.zh.ch', 'http://web.wms.zh.ch', 'lk500', 'image/png', 'mapserver', '369997', '320000', '280000', '220000')");
             _firstTime = false;
         }

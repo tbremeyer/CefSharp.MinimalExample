@@ -152,9 +152,11 @@
     <EmbeddedResource Include="web\index.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="web\java\jquery-1.11.3.min.js" />
     <EmbeddedResource Include="web\java\ol.css" />
     <EmbeddedResource Include="web\java\ol.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="web\java\jquery-2.2.3.min.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="web\java\proj4.js" />
