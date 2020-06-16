@@ -140,6 +140,17 @@
         }
     }
 
+    function addViewAfterInitialization() {
+        var newView = new ol.View({
+            projection: projection,
+            extent: extent,
+            center: [2682641, 1247367],
+            resolutions: wmsResolution,
+        });
+        newView.setResolution(wmsResolution[wmsResolution.length - 1]);
+        map.setView(newView);
+    }
+    
     function getCalcResolutionSrv(clientRes) {
         var calcResolutionSrv = clientRes * 0.0254 / 96;
         return calcResolutionSrv.toFixed(10);

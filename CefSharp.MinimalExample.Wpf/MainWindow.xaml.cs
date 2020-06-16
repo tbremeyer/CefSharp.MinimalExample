@@ -23,7 +23,7 @@ namespace CefSharp.MinimalExample.Wpf
         private async Task CallWebSite()
         {
             if (!_firstTime) return;
-            Browser.ShowDevTools();
+            //Browser.ShowDevTools();
             var result = await Browser.EvaluateScriptAsync($"addWMSLayer('http://wms.zh.ch/Raster1000CWMS', 'Landeskarte 1:500000 / web.wms.zh.ch', 'http://web.wms.zh.ch', 'lk500', 'image/png', 'mapserver', '369997', '320000', '280000', '220000')");
             _firstTime = false;
             initializeMap();
@@ -31,6 +31,7 @@ namespace CefSharp.MinimalExample.Wpf
         
         private async Task initializeMap()
         {
+            var response = await Browser.EvaluateScriptAsync("addViewAfterInitialization()", new TimeSpan(0, 0, 1));
             await this.addMarker();
             await this.zoomMap();
         }     
