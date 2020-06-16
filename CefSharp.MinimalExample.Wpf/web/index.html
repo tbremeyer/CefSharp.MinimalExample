@@ -29,7 +29,7 @@
     }
 
     var wmsResolution = [];
-    
+    var markerPoint = new ol.geom.Point([2682641.64, 1247367.93]);
     var extent = [2420000, 130000, 2900000, 1350000];
     var jsLayers = new Object();
     if (proj4) {
@@ -144,6 +144,37 @@
         var calcResolutionSrv = clientRes * 0.0254 / 96;
         return calcResolutionSrv.toFixed(10);
     }
+
+    function addMarker() {
+
+        var markerFeature = new ol.Feature({
+            geometry: markerPoint,
+        });
+        var markerStyle = new ol.style.Style({
+            image: new ol.style.Icon(({
+                anchor: [0.48, 46],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'pixels',
+                opacity: 0.90,
+                src: 'icons/MarkerBlue.png'
+            }))
+        });
+        markerFeature.setStyle(markerStyle);
+
+        var markerVector = new ol.source.Vector({
+            features: [markerFeature]
+        });
+        var markerLayer = new ol.layer.Vector({
+            source: markerVector
+        });
+        markerLayer.setZIndex(99);
+        map.addLayer(markerLayer);
+    };
+
+    function zoomMap(easting, northing) {
+        map.getView().setCenter([easting, northing]);
+        markerPoint.setCoordinates([easting, northing]);
+    };
     
     //create wms layer
     function addWMSLayer(url, attTxt, attHref, layer, format, server, res1, res2, res3, res4) {
@@ -176,6 +207,12 @@
         wmsResolution.push(newRes3);
         wmsResolution.push(Number(newRes4 + 0.00100));
         map.addLayer(newWmsLayer);
+    };
+
+    function setDefaultParameter(easting, northing, zoom) {
+        map.getView().setResolution(wmsResolution[zoom]);
+        map.getView().setCenter([easting, northing]);
+        markerPoint.setCoordinates([easting, northing]);
     };    
 </script>
 Testing Testing 123
